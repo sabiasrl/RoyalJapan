@@ -3,12 +3,13 @@
 import { useState, useEffect, useRef } from 'react';
 import {loadStripe} from "@stripe/stripe-js/pure";
 const stripePromise = loadStripe('pk_test_51PvaMkKQfMI1g1n87ugCQsYOo89kYseL4FdkLHSaajuNu1nCrcSJJE0nWoxEDkbQp3wo8m8meUn0NlIfbhUv07YG00Lp2SEk4U');
-import Footer from '../../components/Footer';
-import Header from '../../components/Header';
-import Sitemap from '../../components/Sitemap';
-import Detail from '../../components/Detail';
+import Footer from '@/app/components/Footer';
+import Header from '@/app/components/Header';
+import Sitemap from '@/app/components/Sitemap';
+import Detail from '@/app/components/Detail';
 import axios from 'axios';
 import {useParams, useSearchParams} from "next/navigation";
+import { useI18n } from '@/app/i18n/I18nContext';
 const baseurl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 
@@ -16,6 +17,7 @@ const baseurl = process.env.NEXT_PUBLIC_API_BASE_URL;
 function Order({}) {
 
     const searchParams = useSearchParams();
+    const { t } = useI18n();
 
     // const [searchParams, setSearchParams] = useSearchParams();
     let searchParamCount = searchParams?.get("count")

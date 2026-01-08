@@ -6,16 +6,18 @@ import Image from "next/image";
 // import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import Footer from '@/components/Footer';
-import Header from '@/components/Header';
-import Sitemap from '@/components/Sitemap';
+import Footer from '@/app/components/Footer';
+import Header from '@/app/components/Header';
+import Sitemap from '@/app/components/Sitemap';
 import {useParams} from "next/navigation";
+import { useI18n } from '@/app/i18n/I18nContext';
 // const baseurl = import.meta.env.REACT_APP_API_BASE_URL;
 const baseurl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 function TopPage() {
 
   const { id } = useParams()
+  const { t } = useI18n();
 
   useEffect(()=>{
     localStorage.setItem("userID", id)
@@ -53,9 +55,9 @@ function TopPage() {
               <img src="/assets/images/top-img02.png" className="sp" alt=""/>
             </div>
             <img src="/assets/images/logo.svg" className="top-logo-img" alt=""/>
-            <p className="top-text1">ロイヤルジャパン<br/>公式オンラインショッピング</p>
-            <p className="top-text2">愛の証を超濃厚に、超濃密に</p>
-            <p className="top-text3">ふたりだけの夜をもっと愉しむために</p>
+            <p className="top-text1">{t('productDetail.royalJapan')}<br/>{t('productDetail.officialOnline')}</p>
+            <p className="top-text2">{t('productDetail.tagline1')}</p>
+            <p className="top-text3">{t('productDetail.tagline2')}</p>
           </section>
           <section className="site">
             <div className="contain">
@@ -65,8 +67,8 @@ function TopPage() {
                     <img src="/assets/images/site01.png" alt=""/>
                   </div>
                   <h3 className="site-part-title">
-                    大自然の恵み”トンカットアリ” <br/>
-                    製造している製品の含有成分は７種類の自然成分です。
+                    {t('productListing.natureGift')} <br/>
+                    {t('productListing.naturalIngredients')}
                   </h3>
                 </div>
                 <div className="site-part">
@@ -74,8 +76,7 @@ function TopPage() {
                     <img src="/assets/images/site02.png" alt=""/>
                   </div>
                   <h3 className="site-part-title">
-                    私たちはETUMAX社マレーシアで純正ロイヤルハニーを<br/>
-                    製造しているため、安心の販売実績があります。
+                    {t('productListing.manufacturing')}
                   </h3>
                 </div>
                 <div className="site-part">
@@ -83,17 +84,16 @@ function TopPage() {
                     <img src="/assets/images/site03.png" alt=""/>
                   </div>
                   <h3 className="site-part-title">
-                    円満な夫婦・恋人との夜の性生活に <br/>
-                    天然の性欲増強剤です。愛を深める秘密の秘薬できっかけを
+                    {t('productListing.naturalAphrodisiac')}
                   </h3>
                 </div>
               </div>
-              <a href="" className="site-link"><p>当サイトについて</p><span></span></a>
+              <a href="" className="site-link"><p>{t('productListing.aboutSite')}</p><span></span></a>
             </div>
           </section>
           <section className="list">
             <div className="list-title">
-              全ての商品
+              {t('product.title')}
             </div>
             <div className="contain">
               {products.map((item, index)=>(
@@ -113,11 +113,11 @@ function TopPage() {
                     <div className="list-item-price">
                       <div className="wrap">
                         <div className="list-item-price-title">
-                          特別限定価格
+                          {t('product.specialPrice')}
                         </div>
-                        <p>{parseInt(item.price_sell).toLocaleString('en-US').toString()} <span>(税込)</span></p>
+                        <p>{parseInt(item.price_sell).toLocaleString('en-US').toString()} <span>{t('product.taxIncluded')}</span></p>
                       </div>
-                      <a href={`/products/${id}/${item.id}`}>今すぐ購入する</a>
+                      <a href={`/products/${id}/${item.id}`}>{t('product.buyNow')}</a>
                     </div>
                   </div>
               ))}
@@ -132,31 +132,31 @@ function TopPage() {
                     <p><img src="/assets/images/icon-instagram.png" alt=""/><span>Instagram</span></p>
                   </div>
                   <div className="social-left-title">
-                    フォロー&投稿<br/>
-                    プレゼントキャンペーン
+                    {t('productListing.followPost')}<br/>
+                    {t('productListing.giftCampaign')}
                   </div>
                 </div>
                 <div className="social-right">
                   <img src="/assets/images/twitter-thumb.png" alt=""/>
-                  <p>9,800円相当をプレゼント！</p>
+                  <p>{t('productListing.giftAmount')}</p>
                 </div>
               </div>
               <div className="social-part">
                 <div className="social-top">
                   <div className="social-title">
-                    <p><span>LINE</span>の<br/>友達追加で</p>
+                    <p><span>LINE</span><br/>{t('productListing.lineFriend')}</p>
                   </div>
                   <div className="social-top-title">
-                    <p>今すぐ使える</p>
+                    <p>{t('productListing.lineCoupon')}</p>
                     <div className="social-top-perc">
-                      ¥500 OFF<br/>
-                      クーポンゲット!
+                      {t('productListing.lineCouponAmount')}<br/>
+                      {t('productListing.lineCouponNow')}
                     </div>
                   </div>
-                  <a href="" className="line-btn"><img src="/assets/images/line.png" alt=""/><p>友だち追加はこちら</p></a>
+                  <a href="" className="line-btn"><img src="/assets/images/line.png" alt=""/><p>{t('productListing.lineAddFriend')}</p></a>
                 </div>
                 <div className="social-bottom">
-                  <p>最新情報やお得なクーポンをLINEでお届けします♫</p>
+                  <p>{t('productListing.lineLatestInfo')}</p>
                 </div>
               </div>
             </div>
@@ -169,9 +169,9 @@ function TopPage() {
                 </div>
                 <div className="others-item-right">
                   <h3 className="others-item-title">
-                    取扱について
+                    {t('productListing.handling')}
                   </h3>
-                  <p>クレジットカード決済がご利用可能になりました。平素よりVITAMAX公式通販ショップをご利用頂き、誠に有難うございます。 この</p>
+                  <p>{t('productListing.handlingDescription')}</p>
                 </div>
               </div>
               <div className="others-item">
@@ -180,9 +180,9 @@ function TopPage() {
                 </div>
                 <div className="others-item-right">
                   <h3 className="others-item-title">
-                    定期購入
+                    {t('productListing.subscription')}
                   </h3>
-                  <p>クレジットカード決済がご利用可能になりました。平素よりVITAMAX公式通販ショップをご利用頂き、誠に有難うございます。 この</p>
+                  <p>{t('productListing.subscriptionDescription')}</p>
                 </div>
               </div>
               <div className="others-item">
@@ -191,9 +191,9 @@ function TopPage() {
                 </div>
                 <div className="others-item-right">
                   <h3 className="others-item-title">
-                    サポート
+                    {t('productListing.support')}
                   </h3>
-                  <p>クレジットカード決済がご利用可能になりました。平素よりVITAMAX公式通販ショップをご利用頂き、誠に有難うございます。 この</p>
+                  <p>{t('productListing.supportDescription')}</p>
                 </div>
               </div>
             </div>

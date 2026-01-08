@@ -2,9 +2,9 @@
 // import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import Footer from '../../components/Footer';
-import Header from '../../components/Header';
-import Sitemap from '../../components/Sitemap';
+import Footer from '@/app/components/Footer';
+import Header from '@/app/components/Header';
+import Sitemap from '@/app/components/Sitemap';
 const baseurl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 function DeliveryPage() {

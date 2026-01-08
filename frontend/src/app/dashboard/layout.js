@@ -3,9 +3,9 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
-import ProductSetting from "@/components/ProductSetting";
-import PageSetting from "@/components/PageSetting";
-import Home from "@/components/Home";
+import ProductSetting from "@/app/components/ProductSetting";
+import PageSetting from "@/app/components/PageSetting";
+import Home from "@/app/components/Home";
 import Link from "next/link";
 
 const baseurl = process.env.NEXT_PUBLIC_API_BASE_URL;

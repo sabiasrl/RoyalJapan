@@ -2,18 +2,23 @@
 // import { useParams } from 'react-router-dom';
 import { useState, useEffect } from "react";
 // import { useNavigate } from 'react-router-dom';
-import Footer from "@/components/Footer";
-import Header from "@/components/Header";
-import Sitemap from "@/components/Sitemap";
+import Image from "next/image";
+import Footer from "@/app/components/Footer";
+import Header from "@/app/components/Header";
+import Sitemap from "@/app/components/Sitemap";
 // import Detail from '../components/Detail';
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { useCart } from "@/app/context/CartContext";
+import { useI18n } from "@/app/i18n/I18nContext";
 
 const baseurl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 function ProductDetail({ params }) {
   // const navigate = useNavigate()
   const router = useRouter();
+  const { t } = useI18n();
+  const { addToCart } = useCart();
   const { user_id, product_id } = params;
   const [coupon, setCoupon] = useState("");
   const [price_sell, setPrice] = useState("");
@@ -27,6 +32,7 @@ function ProductDetail({ params }) {
   const [percent, setPercent] = useState(0);
   const [subtitile, setSubTitle] = useState("");
   const [count, setCount] = useState(10);
+  const [addedToCart, setAddedToCart] = useState(false);
   useEffect(() => {
     getProductData();
   }, []);
@@ -59,6 +65,20 @@ function ProductDetail({ params }) {
     }
   };
 
+  const handleAddToCart = () => {
+    addToCart({
+      product_id: parseInt(product_id),
+      user_id,
+      quantity: parseInt(count),
+      coupon: coupon || '',
+      price_sell: parseInt(price_sell),
+      title,
+      image,
+    });
+    setAddedToCart(true);
+    setTimeout(() => setAddedToCart(false), 2000);
+  };
+
   return (
     <>
       <Header />
@@ -74,12 +94,12 @@ function ProductDetail({ params }) {
           </div>
           <img src="/assets/images/logo.svg" alt="" />
           <p className="top-text1">
-            ロイヤルジャパン
+            {t('productDetail.royalJapan')}
             <br />
-            公式オンラインショッピング
+            {t('productDetail.officialOnline')}
           </p>
-          <p className="top-text2">愛の証を超濃厚に、超濃密に</p>
-          <p className="top-text3">ふたりだけの夜をもっと愉しむために</p>
+          <p className="top-text2">{t('productDetail.tagline1')}</p>
+          <p className="top-text3">{t('productDetail.tagline2')}</p>
         </section>
         <section className="detail">
           <div className="contain">
@@ -108,7 +128,7 @@ function ProductDetail({ params }) {
                   <div className="detail-cost">
                     <div className="detail-count">
                       <div style={{ color: "#8F121A", fontSize: "20px" }}>
-                        数量{" "}
+                        {t('common.quantity')}{" "}
                         <span
                           style={{
                             color: "red",
@@ -116,7 +136,7 @@ function ProductDetail({ params }) {
                             marginLeft: "10px",
                           }}
                         >
-                          ※最低10個〜
+                          {t('product.minimumQuantity')}
                         </span>
                       </div>
                       <div className="count-input">
@@ -135,13 +155,13 @@ function ProductDetail({ params }) {
                       </div>
                     </div>
                     <div className="detail-price">
-                      <p>特別限定価格</p>
+                      <p>{t('product.specialPrice')}</p>
                       {percent !== 0 && (
                         <p className="original">
                           {parseInt(price_sell * count)
                             .toLocaleString("en-US")
                             .toString()}
-                          円 <span>(税込)</span>
+                          {t('common.yen')} <span>{t('product.taxIncluded')}</span>
                         </p>
                       )}
                       <p>
@@ -151,32 +171,65 @@ function ProductDetail({ params }) {
                         )
                           .toLocaleString("en-US")
                           .toString()}
-                        円 <span>(税込)</span>
+                        {t('common.yen')} <span>{t('product.taxIncluded')}</span>
                       </p>
                     </div>
                   </div>
                   <a onClick={handleSubmit} className="sp">
-                    今すぐ購入する
+                    {t('product.buyNow')}
                   </a>
                 </div>
               </div>
             </div>
             <div className="form-input">
-              <div className="label">紹介コード</div>
+              <div className="label">{t('product.couponCode')}</div>
               <div className="input">
                 <input
                   value={coupon}
                   onChange={(e) => setCoupon(e.target.value)}
                   type="text"
                   name="address"
-                  placeholder="XXXXXXXXX"
+                  placeholder={t('product.couponPlaceholder')}
                 />
               </div>
             </div>
-            <a onClick={handleSubmit} className="site-link pc">
-              <p>購入する</p>
-              <span></span>
-            </a>
+            <div style={{ display: 'flex', gap: '15px', marginTop: '20px' }}>
+              <a onClick={handleSubmit} className="site-link pc" style={{ flex: 1 }}>
+                <p>{t('common.purchase')}</p>
+                <span></span>
+              </a>
+              <a
+                onClick={handleAddToCart}
+                className="site-link pc"
+                style={{
+                  flex: 1,
+                  background: addedToCart ? '#4CAF50' : '#8F121A',
+                  cursor: 'pointer',
+                }}
+              >
+                <p>{addedToCart ? t('cart.addedToCart') : t('cart.addToCart')}</p>
+                <span></span>
+              </a>
+            </div>
+            <div style={{ display: 'flex', gap: '15px', marginTop: '15px' }}>
+              <a onClick={handleSubmit} className="sp" style={{ flex: 1, textAlign: 'center', padding: '15px', background: '#8F121A', color: 'white', borderRadius: '4px' }}>
+                {t('product.buyNow')}
+              </a>
+              <a
+                onClick={handleAddToCart}
+                className="sp"
+                style={{
+                  flex: 1,
+                  textAlign: 'center',
+                  padding: '15px',
+                  background: addedToCart ? '#4CAF50' : '#8F121A',
+                  color: 'white',
+                  borderRadius: '4px',
+                }}
+              >
+                {addedToCart ? t('cart.addedToCart') : t('cart.addToCart')}
+              </a>
+            </div>
             <p className="detail-text sp">{description}</p>
           </div>
         </section>
