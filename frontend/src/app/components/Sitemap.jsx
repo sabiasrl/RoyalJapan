@@ -1,5 +1,8 @@
+'use client'
+import { useI18n } from '@/app/i18n/I18nContext';
 
 function SiteMap(){
+    const { t } = useI18n();
 
     return (
         <div className="sitemap">
@@ -10,16 +13,16 @@ function SiteMap(){
 				<div className="sitemap-left">
 					<div className="sitemap-part">
 						<div className="sitemap-item">
-							特定商取引法に基づく表記
+							{t('sitemap.legal')}
 						</div>
 						<div className="sitemap-item">
-							個人情報の取扱について
+							{t('sitemap.privacy')}
 						</div>
 						<div className="sitemap-item">
-							ご利用規約
+							{t('sitemap.terms')}
 						</div>
 						<div className="sitemap-item">
-							サイトマップ
+							{t('sitemap.sitemap')}
 						</div>
 					</div>
 					<div className="sitemap-copyright pc">
@@ -35,7 +38,7 @@ function SiteMap(){
 				<div className="sitemap-right pc">
 					<img src="/assets/images/logo.svg" alt=""/>
 					<div className="sitemap-title">
-						ロイヤルジャパン公式通販サイト
+						{t('sitemap.officialSite')}
 					</div>
 				</div>
 			</div>

@@ -11,6 +11,7 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/app/context/CartContext";
 import { useI18n } from "@/app/i18n/I18nContext";
+import '@/app/styles/productCards.css';
 
 const baseurl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -106,17 +107,45 @@ function ProductDetail({ params }) {
             <div className="wrap">
               <div className="detail-left">
                 <div className="detail-main">
-                  {image && <img src={image} alt="" />}
+                  <img 
+                    src={image || '/assets/images/producta.png'} 
+                    alt={title}
+                    loading="lazy"
+                    onError={(e) => {
+                      e.target.src = '/assets/images/producta.png';
+                    }}
+                  />
                 </div>
                 <div className="detail-subimage">
                   <div className="detail-subimage-thumb">
-                    {image1 && <img src={image1} alt="" />}
+                    <img 
+                      src={image1 || '/assets/images/productb.png'} 
+                      alt={title}
+                      loading="lazy"
+                      onError={(e) => {
+                        e.target.src = '/assets/images/productb.png';
+                      }}
+                    />
                   </div>
                   <div className="detail-subimage-thumb">
-                    {image2 && <img src={image2} alt="" />}
+                    <img 
+                      src={image2 || '/assets/images/productc.png'} 
+                      alt={title}
+                      loading="lazy"
+                      onError={(e) => {
+                        e.target.src = '/assets/images/productc.png';
+                      }}
+                    />
                   </div>
                   <div className="detail-subimage-thumb">
-                    {image3 && <img src={image3} alt="" />}
+                    <img 
+                      src={image3 || '/assets/images/productd.png'} 
+                      alt={title}
+                      loading="lazy"
+                      onError={(e) => {
+                        e.target.src = '/assets/images/productd.png';
+                      }}
+                    />
                   </div>
                 </div>
               </div>

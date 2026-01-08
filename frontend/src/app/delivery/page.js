@@ -5,9 +5,11 @@ import axios from 'axios';
 import Footer from '@/app/components/Footer';
 import Header from '@/app/components/Header';
 import Sitemap from '@/app/components/Sitemap';
+import { useI18n } from '@/app/i18n/I18nContext';
 const baseurl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 function DeliveryPage() {
+    const { t } = useI18n();
     const [displayData, setDisplayData] = useState({})
     useEffect(()=>{
         getPageData()
@@ -41,9 +43,9 @@ function DeliveryPage() {
                         <img src="/assets/images/top-img02.png" className="sp" alt=""/>
                     </div>
                     <img src="/assets/images/logo.svg" className="top-logo-img" alt=""/>
-                    <p className="top-text1">ロイヤルジャパン<br/>公式オンラインショッピング</p>
-                    <p className="top-text2">愛の証を超濃厚に、超濃密に</p>
-                    <p className="top-text3">ふたりだけの夜をもっと愉しむために</p>
+                    <p className="top-text1">{t('productDetail.royalJapan')}<br/>{t('productDetail.officialOnline')}</p>
+                    <p className="top-text2">{t('productDetail.tagline1')}</p>
+                    <p className="top-text3">{t('productDetail.tagline2')}</p>
                 </section>
 
                 <section className="list">

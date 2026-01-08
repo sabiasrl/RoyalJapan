@@ -7,6 +7,7 @@ import Header from '@/app/components/Header';
 import Footer from '@/app/components/Footer';
 import Sitemap from '@/app/components/Sitemap';
 import axios from 'axios';
+import '@/app/styles/productCards.css';
 
 const baseurl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -76,7 +77,7 @@ export default function CartPage() {
     return (
       <>
         <Header />
-        <div className="product">
+        <div className="product" style={{ paddingTop: '120px' }}>
           <section className="list">
             <div className="list-title">{t('cart.title')}</div>
             <div className="contain">
@@ -110,7 +111,7 @@ export default function CartPage() {
   return (
     <>
       <Header />
-      <div className="product">
+      <div className="product" style={{ paddingTop: '120px' }}>
         <section className="list">
           <div className="list-title">{t('cart.title')}</div>
           <div className="contain">
@@ -132,14 +133,15 @@ export default function CartPage() {
                       gap: '20px',
                     }}
                   >
-                    <div style={{ flex: '0 0 150px' }}>
-                      {item.image && (
-                        <img
-                          src={item.image}
-                          alt={item.title}
-                          style={{ width: '100%', borderRadius: '4px' }}
-                        />
-                      )}
+                    <div className="cart-item-image-container" style={{ flex: '0 0 180px', minHeight: '180px' }}>
+                      <img
+                        src={item.image || '/assets/images/producta.png'}
+                        alt={item.title}
+                        loading="lazy"
+                        onError={(e) => {
+                          e.target.src = '/assets/images/producta.png';
+                        }}
+                      />
                     </div>
                     <div style={{ flex: '1' }}>
                       <h3 style={{ marginBottom: '10px', fontSize: '18px' }}>{item.title}</h3>

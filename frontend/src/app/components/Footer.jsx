@@ -1,4 +1,9 @@
+'use client'
+import { useI18n } from '@/app/i18n/I18nContext';
+
 function Footer(){
+    const { t } = useI18n();
+    
     return(
         <footer className="pc">
 			<div className="contain">
@@ -63,7 +68,7 @@ function Footer(){
 				</div> */}
 				<div className="footer-right">
 					<div className="footer-sns-title">
-						ビタマックス公式SNSアカウント
+						{t('footer.officialSNS')}
 					</div>
 					<div className="footer-sns-part">
 						<a href="/" className="footer-sns-item">

@@ -11,6 +11,8 @@ import Header from '@/app/components/Header';
 import Sitemap from '@/app/components/Sitemap';
 import {useParams} from "next/navigation";
 import { useI18n } from '@/app/i18n/I18nContext';
+import { mockApi, mockProducts, MOCK_USER_ID } from '@/app/utils/mockApi';
+import '@/app/styles/productCards.css';
 // const baseurl = import.meta.env.REACT_APP_API_BASE_URL;
 const baseurl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -31,17 +33,36 @@ function TopPage() {
   },[])
 
   const getUserData = (id)=>{
+    // If no ID provided, use mock products directly
+    if (!id) {
+      setProducts(mockProducts);
+      return;
+    }
+
     let config = {
       method: 'get',
       url: `${baseurl}/api/user-products/${id}`,
     };
     axios(config)
         .then(async (response) => {
-
-          setProducts(response.data.products)
+          if (response.data.products && response.data.products.length > 0) {
+            setProducts(response.data.products);
+          } else {
+            // If API returns empty, use mock products
+            setProducts(mockProducts);
+          }
         })
         .catch((err)=>{
-
+          // Fallback to mock products if API fails
+          console.log('API failed, using mock products');
+          mockApi.getUserProducts(id || MOCK_USER_ID)
+            .then((response) => {
+              setProducts(response.data.products);
+            })
+            .catch(() => {
+              // If mock API also fails, use static mock products
+              setProducts(mockProducts);
+            });
         })
   }
 
@@ -99,7 +120,14 @@ function TopPage() {
               {products.map((item, index)=>(
                   <div className="list-item" key={index}>
                     <div className="list-item-thumb">
-                      <img src={item.image} alt=""/>
+                      <img 
+                        src={item.image || '/assets/images/producta.png'} 
+                        alt={item.title}
+                        loading="lazy"
+                        onError={(e) => {
+                          e.target.src = '/assets/images/producta.png';
+                        }}
+                      />
                     </div>
                     <h3 className="list-item-title">
                       {item.title}

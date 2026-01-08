@@ -126,6 +126,13 @@
   "footer": {
     "officialSNS": "ビタマックス公式SNSアカウント"
   },
+  "sitemap": {
+    "legal": "特定商取引法に基づく表記",
+    "privacy": "個人情報の取扱について",
+    "terms": "ご利用規約",
+    "sitemap": "サイトマップ",
+    "officialSite": "ロイヤルジャパン公式通販サイト"
+  },
   "productListing": {
     "natureGift": "大自然の恵み\"トンカットアリ\"",
     "naturalIngredients": "製造している製品の含有成分は７種類の自然成分です。",

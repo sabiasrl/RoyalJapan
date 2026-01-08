@@ -1,9 +1,12 @@
 'use client'
 import { useState, useEffect } from "react"
 import axios from 'axios';
+import { useI18n } from '@/app/i18n/I18nContext';
+import { mockApi, mockProducts } from '@/app/utils/mockApi';
 const baseurl = process.env.NEXT_PUBLIC_API_BASE_URL;
 function Detail({id, user, coupon, count, setPrice}){
-    const [price_sell, setPriceSell] = useState("");
+    const { t } = useI18n();
+    const [price_sell, setPriceSell] = useState(0);
     const [price_id, setPriceId] = useState("");
     const [description, setDescription] = useState("");
     const [title, setTitle] = useState("");
@@ -24,12 +27,8 @@ function Detail({id, user, coupon, count, setPrice}){
         };
         axios(config)
         .then(async (response) => {
-            if(coupon)
-            {
-                getCoupon()
-            }
-            setPrice(response.data.price_sell * count)
-            setPriceSell(response.data.price_sell);
+            const productPrice = parseInt(response.data.price_sell) || 0;
+            setPriceSell(productPrice);
             setPriceId(response.data.price_id);
             setDescription(response.data.description);
             setTitle(response.data.title);
@@ -38,14 +37,44 @@ function Detail({id, user, coupon, count, setPrice}){
             setImage2(response.data.image2);
             setImage3(response.data.image3);
             setSubTitle(response.data.package);
+            
+            // Calculate initial price
+            const initialPrice = productPrice * count;
+            setPrice(initialPrice);
+            
+            // Apply coupon if exists
+            if(coupon)
+            {
+                getCoupon(productPrice)
+            }
         })
         .catch((err)=>{
-
+            console.error('Error fetching product:', err);
+            // Fallback to mock product if API fails
+            const mockProduct = mockProducts.find(p => p.id === parseInt(id)) || mockProducts[0];
+            if (mockProduct) {
+                const productPrice = parseInt(mockProduct.price_sell) || 0;
+                setPriceSell(productPrice);
+                setPriceId(mockProduct.price_id);
+                setDescription(mockProduct.description);
+                setTitle(mockProduct.title);
+                setImage(mockProduct.image);
+                setImage1(mockProduct.image1);
+                setImage2(mockProduct.image2);
+                setImage3(mockProduct.image3);
+                setSubTitle(mockProduct.package);
+                
+                const initialPrice = productPrice * count;
+                setPrice(initialPrice);
+                
+                if(coupon) {
+                    getCoupon(productPrice);
+                }
+            }
         })
     }
 
-    const getCoupon = () =>{
-        
+    const getCoupon = (productPrice) =>{
         let data = JSON.stringify({
             'user':user,
             'coupon':coupon ? coupon : ""
@@ -60,19 +89,16 @@ function Detail({id, user, coupon, count, setPrice}){
         };
         axios(config)
         .then((response) => {
-            setPercent(response.data.percent)
+            const discountPercent = parseInt(response.data.percent) || 0;
+            setPercent(discountPercent);
             
-            if(response.data.percent!=0)
-            {
-                setPrice(price_sell * count)
-            }
-            else{
-                setPrice(price_sell - price_sell * response.data.percent / 100)
-            }
-           
+            // Calculate price with discount
+            const pricePerItem = productPrice - (productPrice * discountPercent / 100);
+            const totalPrice = pricePerItem * count;
+            setPrice(totalPrice);
         })
         .catch((err)=>{
-
+            console.error('Error fetching coupon:', err);
         })
     }
 
@@ -108,13 +134,21 @@ function Detail({id, user, coupon, count, setPrice}){
                 <div className="detail-count-sp">
                     <div className="detail-cost">
                         <div className="detail-count">
-                            <p>数量</p>
+                            <p>{t('common.quantity')}</p>
                             <p>{count}</p>
                         </div>
                         <div className="detail-price">
-                            <p>特別限定価格</p>
-                            {percent !==0 && <p className="original">{parseInt(price_sell * count).toLocaleString('en-US').toString()}円 <span>(税込)</span></p>}
-                            <p>{parseInt((price_sell - price_sell * percent / 100) * count).toLocaleString('en-US').toString()}円 <span>(税込)</span></p>
+                            <p>{t('product.specialPrice')}</p>
+                            {percent !== 0 && price_sell && (
+                                <p className="original">
+                                    {parseInt(price_sell * count).toLocaleString('en-US')}{t('common.yen')} <span>{t('product.taxIncluded')}</span>
+                                </p>
+                            )}
+                            {price_sell && (
+                                <p>
+                                    {parseInt((price_sell - (price_sell * percent / 100)) * count).toLocaleString('en-US')}{t('common.yen')} <span>{t('product.taxIncluded')}</span>
+                                </p>
+                            )}
                         </div>
                     </div>
                     {/* <a href={`/order/${user}/${id}/${coupon}`} className="sp">今すぐ購入する</a> */}

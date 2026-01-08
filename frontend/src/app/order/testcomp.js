@@ -1,7 +1,7 @@
 'use client'
 // import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
-import {loadStripe} from "@stripe/stripe-js/pure";
+import {loadStripe} from "@stripe/stripe-js";
 const stripePromise = loadStripe('pk_test_51PvaMkKQfMI1g1n87ugCQsYOo89kYseL4FdkLHSaajuNu1nCrcSJJE0nWoxEDkbQp3wo8m8meUn0NlIfbhUv07YG00Lp2SEk4U');
 import Footer from '@/app/components/Footer';
 import Header from '@/app/components/Header';
@@ -166,29 +166,29 @@ function Order({}) {
     return(
         <>
             <Header/>
-            <div className="product" id="order">
+            <div className="product" id="order" style={{ paddingTop: '120px' }}>
                 <section className="top pc">
                     <div className="top-img">
                         <img src="/assets/images/top-img.png" alt=""/>
                         <img src="/assets/images/top-img02.png" className="sp" alt=""/>
                     </div>
                     <img src="/assets/images/logo.svg" alt=""/>
-                    <p className="top-text1">ロイヤルジャパン<br/>公式オンラインショッピング</p>
-                    <p className="top-text2">愛の証を超濃厚に、超濃密に</p>
-                    <p className="top-text3">ふたりだけの夜をもっと愉しむために</p>
+                    <p className="top-text1">{t('productDetail.royalJapan')}<br/>{t('productDetail.officialOnline')}</p>
+                    <p className="top-text2">{t('productDetail.tagline1')}</p>
+                    <p className="top-text3">{t('productDetail.tagline2')}</p>
                 </section>
                 <section className="order">
                     <div className="contain">
                         {tab!==3 && <Detail id={product_id} coupon={coupon} user={user_id} count={count} setPrice={setPrice}/>}
                         <div className="order-form">
-                            {tab==1 && <div className="form-notice">お客様の情報をご入力ください。</div>}
+                            {tab==1 && <div className="form-notice">{t('order.enterCustomerInfo')}</div>}
                             <div className="form-step">
                                 <div className={`form-step-part ${tab==1?"active":""}`}>
                                     <div className="form-step-part-number">
                                         1
                                     </div>
                                     <div className="form-step-part-title">
-                                        お客様情報入力
+                                        {t('order.customerInfo')}
                                     </div>
                                 </div>
                                 <div className={`form-step-part ${tab==2?"active":""}`}>
@@ -196,7 +196,7 @@ function Order({}) {
                                         2
                                     </div>
                                     <div className="form-step-part-title">
-                                        ご注文内容のご確認
+                                        {t('order.orderConfirmation')}
                                     </div>
                                 </div>
                                 <div className={`form-step-part ${tab==3?"active":""}`}>
@@ -204,40 +204,40 @@ function Order({}) {
                                         3
                                     </div>
                                     <div className="form-step-part-title">
-                                        完了
+                                        {t('order.orderComplete')}
                                     </div>
                                 </div>
                             </div>
 
                             {tab==1&&<div className="form-group">
                                 <div className="form-input">
-                                    <div className="label">お名前</div>
+                                    <div className="label">{t('order.name')}</div>
                                     <div className="input">
-                                        <input value={name} onChange={(e)=>setName(e.target.value)} type="text" name="name" placeholder="Yamaha Taro"/>
+                                        <input value={name} onChange={(e)=>setName(e.target.value)} type="text" name="name" placeholder={t('order.namePlaceholder')}/>
                                     </div>
                                 </div>
                                 <div className="form-input">
-                                    <div className="label">発送先の住所</div>
+                                    <div className="label">{t('order.shippingAddress')}</div>
                                     <div className="input">
-                                        <input value={address1} onChange={(e)=>setAddress1(e.target.value)} type="text" name="order-address" placeholder="住所"/>
+                                        <input value={address1} onChange={(e)=>setAddress1(e.target.value)} type="text" name="order-address" placeholder={t('order.addressPlaceholder')}/>
                                     </div>
                                 </div>
                                 <div className="form-input">
-                                    <div className="label">住所</div>
+                                    <div className="label">{t('order.address')}</div>
                                     <div className="input">
-                                        <input value={address} onChange={(e)=>setAddress(e.target.value)} type="text" name="address" placeholder="住所"/>
+                                        <input value={address} onChange={(e)=>setAddress(e.target.value)} type="text" name="address" placeholder={t('order.addressPlaceholder')}/>
                                     </div>
                                 </div>
                                 <div className="form-input">
-                                    <div className="label">電話番号</div>
+                                    <div className="label">{t('order.phone')}</div>
                                     <div className="input">
-                                        <input value={phone} onChange={(e)=>setPhone(e.target.value)} type="text" name="phone" placeholder="xxxxxxxxx"/>
+                                        <input value={phone} onChange={(e)=>setPhone(e.target.value)} type="text" name="phone" placeholder={t('order.phonePlaceholder')}/>
                                     </div>
                                 </div>
                                 <div className="form-input">
-                                    <div className="label">メールアドレス</div>
+                                    <div className="label">{t('order.email')}</div>
                                     <div className="input">
-                                        <input value={email} onChange={(e)=>setEmail(e.target.value)} type="text" name="email" placeholder="xxx@xxx.com"/>
+                                        <input value={email} onChange={(e)=>setEmail(e.target.value)} type="text" name="email" placeholder={t('order.emailPlaceholder')}/>
                                     </div>
                                 </div>
                             </div>}
@@ -245,33 +245,33 @@ function Order({}) {
                                 <div className='card-container'>
                                     <div className="form-group">
                                         <div className="form-input">
-                                            <div className="label">振込先銀行</div>
+                                            <div className="label">{t('order.bankName')}</div>
                                             <div className="input">
-                                                住信SBIネット銀行
+                                                {t('order.bankValue')}
                                             </div>
                                         </div>
                                         <div className="form-input">
-                                            <div className="label">支店名</div>
+                                            <div className="label">{t('order.branchName')}</div>
                                             <div className="input">
-                                                イチゴ支店（１０１）
+                                                {t('order.branchValue')}
                                             </div>
                                         </div>
                                         <div className="form-input">
-                                            <div className="label">口座番号</div>
+                                            <div className="label">{t('order.accountNumber')}</div>
                                             <div className="input">
-                                                3981445
+                                                {t('order.accountValue')}
                                             </div>
                                         </div>
                                         <div className="form-input">
-                                            <div className="label">振込先名義</div>
+                                            <div className="label">{t('order.accountHolder')}</div>
                                             <div className="input">
-                                                キムラ　シンジ
+                                                {t('order.accountHolderValue')}
                                             </div>
                                         </div>
                                         <div className="form-input">
-                                            <div className="label">振込金額</div>
+                                            <div className="label">{t('order.transferAmount')}</div>
                                             <div className="input">
-                                                {parseInt(price).toLocaleString('en-US').toString()}円
+                                                {parseInt(price).toLocaleString('en-US').toString()}{t('common.yen')}
 
                                             </div>
                                         </div>
@@ -279,7 +279,7 @@ function Order({}) {
                                             <div className="label"></div>
                                             <div className="input">
                                                 <div style={{fontSize:"12px", color:"red"}}>
-                                                    ※振込人名義は必ず、発送先の方のお名前と同じ名前でお振込ください。
+                                                    {t('order.paymentNote')}
                                                 </div>
                                             </div>
                                         </div>
@@ -290,23 +290,20 @@ function Order({}) {
                                 <>
                                     <div className="card-container order-complete">
                                         <div>
-                                            <div className='text'>下記の注文情報で承りました。</div>
-                                            <div className='text red'>入金の確認が取れ次第商品を発送いたします。</div>
+                                            <div className='text'>{t('order.orderReceived')}</div>
+                                            <div className='text red'>{t('order.shippingNote')}</div>
                                             <div className='text'>
-                                                商品の発送が完了しましたら、ご入力いただいたメール宛に発送情報を送付いたします。
+                                                {t('order.shippingEmail')}
                                             </div>
-                                            <div className='text'>商品の到着予定：２〜４週間</div>
+                                            <div className='text'>{t('order.deliveryTime')}</div>
 
-                                            <div className='text red'>必ず、【お客様サポート専用ライン】を追加して下さい。</div>
+                                            <div className='text red'>{t('order.lineSupport')}</div>
                                         </div>
                                         <div className="detail-right">
                                             <div>
-                                                <div className='text'>【お客様サポート専用ライン】</div>
+                                                <div className='text'>{t('order.lineSupportTitle')}</div>
                                                 <div className='text'>
-                                                    誤って情報を入力した場合など
-                                                </div>
-                                                <div className='text'>
-                                                    こちらからお問い合わせ下さい。
+                                                    {t('order.lineSupportNote')}
                                                 </div>
                                                 <img src="/assets/images/line1.png"/>
                                             </div>
@@ -318,33 +315,33 @@ function Order({}) {
                                     </div>
                                     <div className='card-container order-complete'>
                                         <div className="form-group">
-                                            <div className="label" style={{paddingLeft:"20px", marginBottom:"20px", fontSize:"15px"}}> 【注文情報】</div>
+                                            <div className="label" style={{paddingLeft:"20px", marginBottom:"20px", fontSize:"15px"}}> {t('order.orderInfo')}</div>
                                             <div className="form-input">
-                                                <div className="label">発送先のお名前</div>
+                                                <div className="label">{t('order.shippingName')}</div>
                                                 <div className="input">
                                                     {name}
                                                 </div>
                                             </div>
                                             <div className="form-input">
-                                                <div className="label">発送先の住所</div>
+                                                <div className="label">{t('order.shippingAddressLabel')}</div>
                                                 <div className="input">
                                                     {address1}
                                                 </div>
                                             </div>
                                             <div className="form-input">
-                                                <div className="label">住所</div>
+                                                <div className="label">{t('order.address')}</div>
                                                 <div className="input">
                                                     {address}
                                                 </div>
                                             </div>
                                             <div className="form-input">
-                                                <div className="label">電話番号</div>
+                                                <div className="label">{t('order.phone')}</div>
                                                 <div className="input">
                                                     {phone}
                                                 </div>
                                             </div>
                                             <div className="form-input">
-                                                <div className="label">メールアドレス</div>
+                                                <div className="label">{t('order.email')}</div>
                                                 <div className="input">
                                                     {email}
 
@@ -353,36 +350,36 @@ function Order({}) {
                                         </div>
                                         <div className="form-group">
 
-                                            <div className="label" style={{paddingLeft:"20px", marginBottom:"20px", fontSize:"15px"}}> 【支払い情報】</div>
+                                            <div className="label" style={{paddingLeft:"20px", marginBottom:"20px", fontSize:"15px"}}> {t('order.paymentInfo')}</div>
 
                                             <div className="form-input">
-                                                <div className="label">振込先銀行</div>
+                                                <div className="label">{t('order.bankName')}</div>
                                                 <div className="input">
-                                                    住信SBIネット銀行
+                                                    {t('order.bankValue')}
                                                 </div>
                                             </div>
                                             <div className="form-input">
-                                                <div className="label">支店名</div>
+                                                <div className="label">{t('order.branchName')}</div>
                                                 <div className="input">
-                                                    イチゴ支店（１０１）
+                                                    {t('order.branchValue')}
                                                 </div>
                                             </div>
                                             <div className="form-input">
-                                                <div className="label">口座番号</div>
+                                                <div className="label">{t('order.accountNumber')}</div>
                                                 <div className="input">
-                                                    3981445
+                                                    {t('order.accountValue')}
                                                 </div>
                                             </div>
                                             <div className="form-input">
-                                                <div className="label">振込先名義</div>
+                                                <div className="label">{t('order.accountHolder')}</div>
                                                 <div className="input">
-                                                    キムラ　シンジ
+                                                    {t('order.accountHolderValue')}
                                                 </div>
                                             </div>
                                             <div className="form-input">
-                                                <div className="label">振込金額</div>
+                                                <div className="label">{t('order.transferAmount')}</div>
                                                 <div className="input">
-                                                    {parseInt(price).toLocaleString('en-US').toString()}円
+                                                    {parseInt(price).toLocaleString('en-US').toString()}{t('common.yen')}
 
                                                 </div>
                                             </div>
@@ -391,7 +388,7 @@ function Order({}) {
                                     </div>
                                 </>
                             }
-                            {tab!==3&& <button onClick={handleClick} className="form-btn"><p>{tab==1?"次へ" : "支払い完了"}</p><span></span></button>}
+                            {tab!==3&& <button onClick={handleClick} className="form-btn"><p>{tab==1?t('common.next') : t('order.paymentComplete')}</p><span></span></button>}
                         </div>
                     </div>
                 </section>

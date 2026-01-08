@@ -126,6 +126,13 @@
   "footer": {
     "officialSNS": "Official SNS Accounts"
   },
+  "sitemap": {
+    "legal": "Legal Information",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "sitemap": "Sitemap",
+    "officialSite": "Royal Japan Official Online Store"
+  },
   "productListing": {
     "natureGift": "Nature's Gift \"Tongkat Ali\"",
     "naturalIngredients": "The products we manufacture contain 7 types of natural ingredients.",

@@ -1,10 +1,12 @@
 'use client'
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect, useRef } from 'react';
+import { setupDevUtils } from '@/app/utils/devUtils';
 
 const CartContext = createContext();
 
 export function CartProvider({ children }) {
   const [cartItems, setCartItems] = useState([]);
+  const cartContextRef = useRef(null);
 
   // Load cart from localStorage on mount
   useEffect(() => {
@@ -82,18 +84,28 @@ export function CartProvider({ children }) {
     return cartItems.reduce((count, item) => count + item.quantity, 0);
   };
 
+  const cartContextValue = {
+    cartItems,
+    addToCart,
+    removeFromCart,
+    updateQuantity,
+    clearCart,
+    getCartTotal,
+    getCartCount,
+  };
+
+  // Keep ref updated with latest context
+  cartContextRef.current = cartContextValue;
+
+  // Setup dev utilities in development mode (only once)
+  useEffect(() => {
+    if (process.env.NODE_ENV === 'development' && typeof window !== 'undefined') {
+      setupDevUtils(() => cartContextRef.current);
+    }
+  }, []); // Setup once on mount
+
   return (
-    <CartContext.Provider
-      value={{
-        cartItems,
-        addToCart,
-        removeFromCart,
-        updateQuantity,
-        clearCart,
-        getCartTotal,
-        getCartCount,
-      }}
-    >
+    <CartContext.Provider value={cartContextValue}>
       {children}
     </CartContext.Provider>
   );
