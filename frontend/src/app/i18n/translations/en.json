@@ -82,7 +82,18 @@
     "lineSupportNote": "If you entered incorrect information, please contact us here.",
     "orderInfo": "Order Information",
     "shippingName": "Shipping Name",
-    "shippingAddressLabel": "Shipping Address"
+    "shippingAddressLabel": "Shipping Address",
+    "paymentMethod": "Payment Method",
+    "bankTransfer": "Bank Transfer",
+    "creditCard": "Credit Card",
+    "payNow": "Pay Now",
+    "processing": "Processing...",
+    "loadingPayment": "Loading payment form",
+    "paymentError": "Payment failed. Please try again.",
+    "cardNumber": "Card Number",
+    "expiryDate": "Expiry Date",
+    "cvc": "CVC",
+    "mockPaymentNote": "Mock Payment Mode: Enter any card details for testing. Payment will be simulated."
   },
   "header": {
     "home": "Home",

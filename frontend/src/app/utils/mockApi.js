@@ -114,6 +114,46 @@ export const mockApi = {
       }, 200);
     });
   },
+
+  createPaymentIntent: (productId, couponCode, count, userId) => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        // Find the product
+        const product = mockProducts.find(p => p.id === parseInt(productId)) || mockProducts[0];
+        let totalAmount = product.price_sell * parseInt(count);
+        
+        // Apply coupon discount if exists
+        if (couponCode && couponCode.startsWith('TEST')) {
+          totalAmount = totalAmount * 0.9; // 10% discount
+        }
+        
+        // Return mock response (but frontend will use MockPaymentForm instead)
+        // This is kept for API compatibility but won't be used with Stripe Elements
+        resolve({
+          data: {
+            mockMode: true,
+            amount: totalAmount,
+            status_code: 200,
+          },
+        });
+      }, 500);
+    });
+  },
+
+  completePayment: (paymentData) => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        // Mock successful payment completion
+        resolve({
+          data: {
+            success: true,
+            status_code: 200,
+            message: 'Payment completed successfully',
+          },
+        });
+      }, 500);
+    });
+  },
 };
 
 // Helper function to populate cart with sample products

@@ -82,7 +82,18 @@
     "lineSupportNote": "誤って情報を入力した場合などこちらからお問い合わせ下さい。",
     "orderInfo": "【注文情報】",
     "shippingName": "発送先のお名前",
-    "shippingAddressLabel": "発送先の住所"
+    "shippingAddressLabel": "発送先の住所",
+    "paymentMethod": "支払い方法",
+    "bankTransfer": "銀行振込",
+    "creditCard": "クレジットカード",
+    "payNow": "支払う",
+    "processing": "処理中...",
+    "loadingPayment": "支払いフォームを読み込み中",
+    "paymentError": "支払いに失敗しました。もう一度お試しください。",
+    "cardNumber": "カード番号",
+    "expiryDate": "有効期限",
+    "cvc": "CVC",
+    "mockPaymentNote": "モック決済モード：テスト用に任意のカード情報を入力してください。支払いはシミュレートされます。"
   },
   "header": {
     "home": "ホーム",
