@@ -2,6 +2,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import localFont from 'next/font/local';
 import { Providers } from '@/app/components/Providers';
+import { DynamicTitle } from '@/app/components/DynamicTitle';
 
 // const geistSans = Geist({
 //   variable: "--font-geist-sans",
@@ -28,8 +29,8 @@ import { Providers } from '@/app/components/Providers';
 
 
 export const metadata = {
-  title: '商品 | ロイヤルジャパン公式通販サイト',
-  description: 'Something',
+  title: 'Products | Royal Japan Official Online Store',
+  description: 'Royal Japan Official Online Store - Premium quality products',
 }
 
 export default function RootLayout({ children }) {
@@ -41,6 +42,7 @@ export default function RootLayout({ children }) {
           // className={`${geistSans.variable} ${geistMono.variable}`}
       >
         <Providers>
+          <DynamicTitle />
           {children}
         </Providers>
       </body>
