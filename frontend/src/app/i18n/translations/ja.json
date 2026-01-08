@@ -83,9 +83,11 @@
     "orderInfo": "【注文情報】",
     "shippingName": "発送先のお名前",
     "shippingAddressLabel": "発送先の住所",
-    "paymentMethod": "支払い方法",
+    "paymentMethod": "支払い方法を選択",
     "bankTransfer": "銀行振込",
+    "bankTransferDesc": "銀行振込",
     "creditCard": "クレジットカード",
+    "creditCardDesc": "Visa、Mastercard、Amex",
     "payNow": "支払う",
     "processing": "処理中...",
     "loadingPayment": "支払いフォームを読み込み中",
@@ -93,7 +95,36 @@
     "cardNumber": "カード番号",
     "expiryDate": "有効期限",
     "cvc": "CVC",
-    "mockPaymentNote": "モック決済モード：テスト用に任意のカード情報を入力してください。支払いはシミュレートされます。"
+    "mockPaymentNote": "モック決済モード：テスト用に任意のカード情報を入力してください。支払いはシミュレートされます。",
+    "cryptocurrency": "暗号通貨",
+    "copy": "コピー",
+    "confirmPayment": "支払いを確認",
+    "verifying": "確認中...",
+    "copied": "クリップボードにコピーしました！",
+    "cryptoTransactionRequired": "トランザクションハッシュを入力してください",
+    "crypto": {
+      "bitcoin": {
+        "title": "ビットコイン (BTC)",
+        "symbol": "BTC"
+      },
+      "ethereum": {
+        "title": "イーサリアム (ETH)",
+        "symbol": "ETH"
+      },
+      "usdt": {
+        "title": "USDT (テザー)",
+        "symbol": "USDT"
+      },
+      "walletAddress": "ウォレットアドレス",
+      "qrCode": "QRコード",
+      "instructions": "支払い手順：",
+      "step1": "上記の正確な金額をウォレットアドレスに送金してください",
+      "step2": "ブロックチェーンの確認を待ってください（通常10〜30分）",
+      "step3": "トランザクションハッシュをコピーして下記に貼り付けてください",
+      "step4": "「支払いを確認」をクリックして注文を完了してください",
+      "transactionHash": "トランザクションハッシュ",
+      "transactionHashPlaceholder": "トランザクションハッシュをここに入力してください"
+    }
   },
   "header": {
     "home": "ホーム",

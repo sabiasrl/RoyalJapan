@@ -12,6 +12,7 @@ import axios from 'axios';
 import {useParams, useSearchParams} from "next/navigation";
 import { useI18n } from '@/app/i18n/I18nContext';
 import { mockApi } from '@/app/utils/mockApi';
+import '@/app/styles/paymentMethods.css';
 const baseurl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 // Mock Payment Form Component (for testing without real Stripe)
@@ -188,6 +189,192 @@ function StripeCheckoutForm({ onSuccess, name, email }) {
     );
 }
 
+// Cryptocurrency Payment Form Component
+function CryptoPaymentForm({ onSuccess, amount, cryptoType }) {
+    const { t } = useI18n();
+    const [isProcessing, setIsProcessing] = useState(false);
+    const [walletAddress, setWalletAddress] = useState('');
+    const [transactionHash, setTransactionHash] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
+    const [cryptoAmount, setCryptoAmount] = useState(0);
+
+    // Mock exchange rates (in a real app, these would come from an API)
+    const exchangeRates = {
+        bitcoin: 0.000015, // 1 JPY = 0.000015 BTC (example rate)
+        ethereum: 0.000025, // 1 JPY = 0.000025 ETH
+        usdt: 0.0067, // 1 JPY = 0.0067 USDT
+    };
+
+    useEffect(() => {
+        // Calculate crypto amount based on JPY price
+        const rate = exchangeRates[cryptoType] || 0.000015;
+        const calculatedAmount = (amount * rate).toFixed(8);
+        setCryptoAmount(calculatedAmount);
+        
+        // Generate mock wallet address
+        const mockAddress = generateMockAddress(cryptoType);
+        setWalletAddress(mockAddress);
+    }, [amount, cryptoType]);
+
+    const generateMockAddress = (type) => {
+        const prefixes = {
+            bitcoin: 'bc1',
+            ethereum: '0x',
+            usdt: '0x', // USDT on Ethereum
+        };
+        const prefix = prefixes[type] || '0x';
+        const random = Math.random().toString(36).substring(2, 34);
+        return prefix + random;
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        
+        if (!transactionHash || transactionHash.length < 10) {
+            setErrorMessage(t('order.cryptoTransactionRequired'));
+            return;
+        }
+
+        setIsProcessing(true);
+        setErrorMessage('');
+
+        // Simulate payment verification
+        setTimeout(() => {
+            setIsProcessing(false);
+            onSuccess();
+        }, 2000);
+    };
+
+    const copyToClipboard = (text) => {
+        navigator.clipboard.writeText(text);
+        alert(t('order.copied'));
+    };
+
+    return (
+        <form onSubmit={handleSubmit} style={{marginTop: '20px'}}>
+            <div style={{marginBottom: '20px', padding: '20px', background: '#f8f9fa', borderRadius: '8px', border: '1px solid #ddd'}}>
+                <div style={{marginBottom: '20px', textAlign: 'center'}}>
+                    <h3 style={{marginBottom: '10px', fontSize: '18px', fontWeight: 'bold'}}>
+                        {t(`order.crypto.${cryptoType}.title`)}
+                    </h3>
+                    <div style={{fontSize: '24px', fontWeight: 'bold', color: '#8F121A', marginBottom: '5px'}}>
+                        {cryptoAmount} {t(`order.crypto.${cryptoType}.symbol`)}
+                    </div>
+                    <div style={{fontSize: '14px', color: '#666'}}>
+                        ≈ {parseInt(amount).toLocaleString('en-US')} {t('common.yen')}
+                    </div>
+                </div>
+
+                <div style={{marginBottom: '20px'}}>
+                    <label style={{display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: 'bold'}}>
+                        {t('order.crypto.walletAddress')}
+                    </label>
+                    <div style={{display: 'flex', gap: '10px'}}>
+                        <input
+                            type="text"
+                            value={walletAddress}
+                            readOnly
+                            style={{
+                                flex: 1,
+                                padding: '10px',
+                                border: '1px solid #ccc',
+                                borderRadius: '4px',
+                                fontSize: '12px',
+                                fontFamily: 'monospace',
+                                background: '#fff'
+                            }}
+                        />
+                        <button
+                            type="button"
+                            onClick={() => copyToClipboard(walletAddress)}
+                            style={{
+                                padding: '10px 15px',
+                                background: '#8F121A',
+                                color: 'white',
+                                border: 'none',
+                                borderRadius: '4px',
+                                cursor: 'pointer',
+                                fontSize: '12px'
+                            }}
+                        >
+                            {t('order.copy')}
+                        </button>
+                    </div>
+                </div>
+
+                <div style={{marginBottom: '20px', textAlign: 'center'}}>
+                    <div style={{
+                        width: '200px',
+                        height: '200px',
+                        margin: '0 auto',
+                        background: '#fff',
+                        border: '1px solid #ddd',
+                        borderRadius: '8px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: '12px',
+                        color: '#999'
+                    }}>
+                        {t('order.crypto.qrCode')}
+                    </div>
+                </div>
+
+                <div style={{marginBottom: '20px', padding: '15px', background: '#fff3cd', borderRadius: '4px', fontSize: '12px', color: '#856404'}}>
+                    <strong>{t('order.crypto.instructions')}</strong>
+                    <ol style={{marginTop: '10px', paddingLeft: '20px'}}>
+                        <li>{t('order.crypto.step1')}</li>
+                        <li>{t('order.crypto.step2')}</li>
+                        <li>{t('order.crypto.step3')}</li>
+                        <li>{t('order.crypto.step4')}</li>
+                    </ol>
+                </div>
+
+                <div style={{marginBottom: '15px'}}>
+                    <label style={{display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: 'bold'}}>
+                        {t('order.crypto.transactionHash')}
+                    </label>
+                    <input
+                        type="text"
+                        value={transactionHash}
+                        onChange={(e) => setTransactionHash(e.target.value)}
+                        placeholder={t('order.crypto.transactionHashPlaceholder')}
+                        style={{
+                            width: '100%',
+                            padding: '10px',
+                            border: '1px solid #ccc',
+                            borderRadius: '4px',
+                            fontSize: '14px',
+                            fontFamily: 'monospace'
+                        }}
+                        required
+                    />
+                </div>
+
+                {errorMessage && (
+                    <div style={{color: 'red', marginBottom: '15px', fontSize: '14px'}}>
+                        {errorMessage}
+                    </div>
+                )}
+
+                <button 
+                    type="submit" 
+                    disabled={isProcessing || !transactionHash}
+                    className="form-btn"
+                    style={{
+                        opacity: (isProcessing || !transactionHash) ? 0.6 : 1,
+                        cursor: (isProcessing || !transactionHash) ? 'not-allowed' : 'pointer',
+                        width: '100%'
+                    }}
+                >
+                    <p>{isProcessing ? t('order.verifying') : t('order.confirmPayment')}</p>
+                    <span></span>
+                </button>
+            </div>
+        </form>
+    );
+}
+
 function Order({}) {
 
     const searchParams = useSearchParams();
@@ -205,7 +392,8 @@ function Order({}) {
     const [phone, setPhone] = useState("");
     const [email, setEmail] = useState("");
     const [clientSecret, setClientSecret] = useState("");
-    const [paymentMethod, setPaymentMethod] = useState("bank"); // "bank" or "stripe"
+    const [paymentMethod, setPaymentMethod] = useState("bank"); // "bank", "stripe", "bitcoin", "ethereum", "usdt"
+    const [cryptoType, setCryptoType] = useState("bitcoin");
     const [loading, setLoading] = useState(false);
     const [isMockMode, setIsMockMode] = useState(false);
     const [price, setPrice] = useState(0);
@@ -274,6 +462,9 @@ function Order({}) {
         if(tab==2){
             if (paymentMethod === "stripe") {
                 // Stripe payment will be handled by CheckoutForm component
+                return;
+            } else if (paymentMethod === "bitcoin" || paymentMethod === "ethereum" || paymentMethod === "usdt") {
+                // Cryptocurrency payment will be handled by CryptoPaymentForm component
                 return;
             } else {
                 // Bank transfer - proceed to completion
@@ -477,56 +668,136 @@ function Order({}) {
                             </div>}
                             {tab==2&&
                                 <div className='card-container'>
-                                    <div className="form-group" style={{marginBottom: '20px'}}>
-                                        <div className="form-input">
-                                            <div className="label">{t('order.paymentMethod')}</div>
-                                            <div className="input" style={{display: 'flex', gap: '20px', flexDirection: 'row'}}>
-                                                <label style={{display: 'flex', alignItems: 'center', cursor: 'pointer'}}>
-                                                    <input 
-                                                        type="radio" 
-                                                        name="paymentMethod" 
-                                                        value="bank" 
-                                                        checked={paymentMethod === "bank"}
-                                                        onChange={(e) => setPaymentMethod(e.target.value)}
-                                                        style={{marginRight: '8px'}}
-                                                    />
-                                                    {t('order.bankTransfer')}
-                                                </label>
-                                                <label style={{display: 'flex', alignItems: 'center', cursor: 'pointer'}}>
-                                                    <input 
-                                                        type="radio" 
-                                                        name="paymentMethod" 
-                                                        value="stripe"
-                                                        checked={paymentMethod === "stripe"}
-                                                        onChange={(e) => setPaymentMethod(e.target.value)}
-                                                        style={{marginRight: '8px'}}
-                                                    />
-                                                    {t('order.creditCard')}
-                                                </label>
-                                            </div>
+                                    {/* Payment Method Selection - Horizontal Layout */}
+                                    <div className="form-group" style={{marginBottom: '30px'}}>
+                                        <div className="label" style={{marginBottom: '20px', fontSize: '18px', fontWeight: 'bold', color: '#333'}}>
+                                            {t('order.paymentMethod')}
+                                        </div>
+                                        <div className="payment-methods-container">
+                                                {/* All Payment Methods in Horizontal Row */}
+                                                <div className="payment-methods-section">
+                                                    <div className="payment-methods-grid">
+                                                        {/* Bank Transfer */}
+                                                        <label className={`payment-method-card ${paymentMethod === "bank" ? "selected" : ""}`}>
+                                                            <input 
+                                                                type="radio" 
+                                                                name="paymentMethod" 
+                                                                value="bank" 
+                                                                checked={paymentMethod === "bank"}
+                                                                onChange={(e) => setPaymentMethod(e.target.value)}
+                                                            />
+                                                            <div className="payment-method-icon bank">🏦</div>
+                                                            <div className="payment-method-content">
+                                                                <div className="payment-method-name">{t('order.bankTransfer')}</div>
+                                                                <div className="payment-method-description">{t('order.bankTransferDesc')}</div>
+                                                            </div>
+                                                            <div className="payment-method-check"></div>
+                                                        </label>
+                                                        
+                                                        {/* Credit Card */}
+                                                        <label className={`payment-method-card ${paymentMethod === "stripe" ? "selected" : ""}`}>
+                                                            <input 
+                                                                type="radio" 
+                                                                name="paymentMethod" 
+                                                                value="stripe"
+                                                                checked={paymentMethod === "stripe"}
+                                                                onChange={(e) => setPaymentMethod(e.target.value)}
+                                                            />
+                                                            <div className="payment-method-icon stripe">💳</div>
+                                                            <div className="payment-method-content">
+                                                                <div className="payment-method-name">{t('order.creditCard')}</div>
+                                                                <div className="payment-method-description">{t('order.creditCardDesc')}</div>
+                                                            </div>
+                                                            <div className="payment-method-check"></div>
+                                                        </label>
+                                                        
+                                                        {/* Bitcoin */}
+                                                        <label className={`crypto-method-card ${paymentMethod === "bitcoin" ? "selected" : ""}`}>
+                                                            <input 
+                                                                type="radio" 
+                                                                name="paymentMethod" 
+                                                                value="bitcoin"
+                                                                checked={paymentMethod === "bitcoin"}
+                                                                onChange={(e) => {
+                                                                    setPaymentMethod(e.target.value);
+                                                                    setCryptoType("bitcoin");
+                                                                }}
+                                                            />
+                                                            <div className="crypto-method-icon bitcoin">₿</div>
+                                                            <div className="crypto-method-name">{t('order.crypto.bitcoin.title')}</div>
+                                                            <div className="crypto-method-symbol">BTC</div>
+                                                            <div className="crypto-method-check"></div>
+                                                        </label>
+                                                        
+                                                        {/* Ethereum */}
+                                                        <label className={`crypto-method-card ${paymentMethod === "ethereum" ? "selected" : ""}`}>
+                                                            <input 
+                                                                type="radio" 
+                                                                name="paymentMethod" 
+                                                                value="ethereum"
+                                                                checked={paymentMethod === "ethereum"}
+                                                                onChange={(e) => {
+                                                                    setPaymentMethod(e.target.value);
+                                                                    setCryptoType("ethereum");
+                                                                }}
+                                                            />
+                                                            <div className="crypto-method-icon ethereum">Ξ</div>
+                                                            <div className="crypto-method-name">{t('order.crypto.ethereum.title')}</div>
+                                                            <div className="crypto-method-symbol">ETH</div>
+                                                            <div className="crypto-method-check"></div>
+                                                        </label>
+                                                        
+                                                        {/* USDT */}
+                                                        <label className={`crypto-method-card ${paymentMethod === "usdt" ? "selected" : ""}`}>
+                                                            <input 
+                                                                type="radio" 
+                                                                name="paymentMethod" 
+                                                                value="usdt"
+                                                                checked={paymentMethod === "usdt"}
+                                                                onChange={(e) => {
+                                                                    setPaymentMethod(e.target.value);
+                                                                    setCryptoType("usdt");
+                                                                }}
+                                                            />
+                                                            <div className="crypto-method-icon usdt">₮</div>
+                                                            <div className="crypto-method-name">{t('order.crypto.usdt.title')}</div>
+                                                            <div className="crypto-method-symbol">USDT</div>
+                                                            <div className="crypto-method-check"></div>
+                                                        </label>
+                                                    </div>
+                                                </div>
                                         </div>
                                     </div>
                                     
-                                    {paymentMethod === "stripe" && isMockMode ? (
-                                        <MockPaymentForm 
-                                            onSuccess={() => completeOrder()}
-                                            name={name}
-                                            email={email}
-                                            amount={price}
-                                        />
-                                    ) : paymentMethod === "stripe" && clientSecret ? (
-                                        <Elements stripe={stripePromise} options={{clientSecret}}>
-                                            <StripeCheckoutForm 
-                                                onSuccess={() => completeOrder()}
-                                                name={name}
-                                                email={email}
-                                            />
-                                        </Elements>
-                                    ) : paymentMethod === "stripe" && loading ? (
-                                        <div style={{padding: '20px', textAlign: 'center'}}>
-                                            {t('order.loadingPayment')}...
-                                        </div>
-                                    ) : paymentMethod === "bank" ? (
+                                    {/* Payment Form - Below Selection */}
+                                    {(paymentMethod === "stripe" || paymentMethod === "bitcoin" || paymentMethod === "ethereum" || paymentMethod === "usdt" || paymentMethod === "bank") && (
+                                        <div className="payment-form-container">
+                                            {paymentMethod === "stripe" && isMockMode ? (
+                                                <MockPaymentForm 
+                                                    onSuccess={() => completeOrder()}
+                                                    name={name}
+                                                    email={email}
+                                                    amount={price}
+                                                />
+                                            ) : paymentMethod === "stripe" && clientSecret ? (
+                                                <Elements stripe={stripePromise} options={{clientSecret}}>
+                                                    <StripeCheckoutForm 
+                                                        onSuccess={() => completeOrder()}
+                                                        name={name}
+                                                        email={email}
+                                                    />
+                                                </Elements>
+                                            ) : paymentMethod === "stripe" && loading ? (
+                                                <div style={{padding: '20px', textAlign: 'center'}}>
+                                                    {t('order.loadingPayment')}...
+                                                </div>
+                                            ) : (paymentMethod === "bitcoin" || paymentMethod === "ethereum" || paymentMethod === "usdt") ? (
+                                                <CryptoPaymentForm 
+                                                    onSuccess={() => completeOrder()}
+                                                    amount={price}
+                                                    cryptoType={cryptoType}
+                                                />
+                                            ) : paymentMethod === "bank" ? (
                                         <div className="form-group">
                                         <div className="form-input">
                                             <div className="label">{t('order.bankName')}</div>
@@ -568,7 +839,9 @@ function Order({}) {
                                             </div>
                                         </div>
                                     </div>
-                                    ) : null}
+                                            ) : null}
+                                        </div>
+                                    )}
                                 </div>
                             }
                             {tab==3&&
@@ -673,7 +946,7 @@ function Order({}) {
                                     </div>
                                 </>
                             }
-                            {tab!==3 && paymentMethod !== "stripe" && (
+                            {tab!==3 && paymentMethod !== "stripe" && paymentMethod !== "bitcoin" && paymentMethod !== "ethereum" && paymentMethod !== "usdt" && (
                                 <button onClick={handleClick} className="form-btn" disabled={loading}>
                                     <p>{tab==1 ? t('common.next') : (loading ? t('order.processing') : t('order.paymentComplete'))}</p>
                                     <span></span>

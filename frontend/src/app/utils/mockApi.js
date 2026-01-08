@@ -154,6 +154,69 @@ export const mockApi = {
       }, 500);
     });
   },
+
+  createCryptoPayment: (productId, couponCode, count, userId, cryptoType) => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        // Find the product
+        const product = mockProducts.find(p => p.id === parseInt(productId)) || mockProducts[0];
+        let totalAmount = product.price_sell * parseInt(count);
+        
+        // Apply coupon discount if exists
+        if (couponCode && couponCode.startsWith('TEST')) {
+          totalAmount = totalAmount * 0.9; // 10% discount
+        }
+        
+        // Mock exchange rates
+        const exchangeRates = {
+          bitcoin: 0.000015,
+          ethereum: 0.000025,
+          usdt: 0.0067,
+        };
+        
+        const rate = exchangeRates[cryptoType] || 0.000015;
+        const cryptoAmount = (totalAmount * rate).toFixed(8);
+        
+        // Generate mock wallet address
+        const prefixes = {
+          bitcoin: 'bc1',
+          ethereum: '0x',
+          usdt: '0x',
+        };
+        const prefix = prefixes[cryptoType] || '0x';
+        const random = Math.random().toString(36).substring(2, 34);
+        const walletAddress = prefix + random;
+        
+        resolve({
+          data: {
+            walletAddress,
+            cryptoAmount,
+            jpyAmount: totalAmount,
+            cryptoType,
+            status_code: 200,
+          },
+        });
+      }, 300);
+    });
+  },
+
+  verifyCryptoTransaction: (transactionHash, cryptoType) => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        // Mock transaction verification
+        // In a real app, this would check the blockchain
+        const isValid = transactionHash && transactionHash.length >= 10;
+        
+        resolve({
+          data: {
+            verified: isValid,
+            status_code: 200,
+            message: isValid ? 'Transaction verified' : 'Invalid transaction hash',
+          },
+        });
+      }, 1000);
+    });
+  },
 };
 
 // Helper function to populate cart with sample products
